@@ -1,0 +1,37 @@
+;; This config file follows the git-config format. More information
+;; can be found here <http://git-scm.com/docs/git-config#_syntax>
+
+;; Just some basic defaults, but these are overridden by the more
+;; specific network settings.
+
+[general]
+nick        = "GoBoat"
+username    = "GoBoat"
+
+;; This uses the normal SQL library on Go. But for now, only the
+;; SQLite3 driver is supported.
+
+[logger]
+driver      = "sqlite3"
+source      = "derp.db"
+
+;; Networks must have unique names or you will experience pain.
+
+[network "funplace"]
+host        = "irc.funplace.net"
+channel     = "#spam"
+channel     = "#boats"
+
+[network "freenode"]
+nick        = "humanoid"
+host        = "irc.freenode.net"
+port        = 6697
+usessl      = yes
+channel     = "#boats"
+
+;[network "freenode2"]
+;nick        = "humanoid"
+;host        = "irc.freenode.net"
+;channel     = "#boats"
+;channel     = "#cars"
+;channel     = "#pets"
