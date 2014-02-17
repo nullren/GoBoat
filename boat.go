@@ -32,6 +32,9 @@ type NetworkConfig struct {
   IdentPass  string
   IdentNick  string
   WaitVHost  bool
+  OperPass   string
+  OperNick   string
+  AutoSconn  bool
 }
 
 type LoggerConfig struct {
@@ -163,6 +166,11 @@ func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit
         ircobj.Join(channel)
       }
     }
+
+    // identify as an oper on connect
+    if cfg.OperPass != "" {
+      ircobj.SendRawf("OPER %v %v", cfg.OperNick, cfg.OperPass)
+    }
   })
 
   // hostname changed
@@ -174,6 +182,23 @@ func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit
         ircobj.Join(channel)
       }
     }
+  })
+
+  // try to fix a netsplit
+  ircobj.AddCallback("NOTICE", func(event *irc.Event) {
+    if cfg.OperPass == "" { return }
+    if cfg.AutoSconn == false { return }
+
+    if event.Arguments[0] != "*" { return }
+    if event.Source != cfg.Host { return }
+    if strings.Index(event.Raw, "Netsplit") < 0 { return }
+
+    // try to get the split host
+    start := strings.Index(event.Raw, "<->") + 4
+    end   := strings.Index(event.Raw[start:], " ")
+    host  := event.Raw[start:start+end]
+
+    ircobj.SendRawf("SCONNECT %v", host)
   })
 
   // log stuff
