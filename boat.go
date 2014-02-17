@@ -199,7 +199,7 @@ func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit
     end   := strings.Index(event.Raw[start:], " ")
     host  := event.Raw[start:start+end]
 
-    ircobj.SendRawf("SCONNECT %v", host)
+    ircobj.SendRawf("CONNECT %v", host)
   })
 
   // log stuff
