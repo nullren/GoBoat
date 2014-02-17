@@ -29,6 +29,9 @@ type NetworkConfig struct {
   Nick       string
   Username   string
   Channel    []string
+  IdentPass  string
+  IdentNick  string
+  WaitVHost  bool
 }
 
 type LoggerConfig struct {
@@ -139,15 +142,37 @@ func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit
   ircobj.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
   // spit out everything to stdout
-  //ircobj.VerboseCallbackHandler = true
+  ircobj.VerboseCallbackHandler = true
 
   // go go go
   ircobj.Connect(fmt.Sprintf("%s:%d", cfg.Host, cfg.Port))
 
-  // join channels
+  // connected to network. identify with nickserv, and maybe join some
+  // channels.
   ircobj.AddCallback("001", func(event *irc.Event) {
-    for _, channel := range cfg.Channel {
-      ircobj.Join(channel)
+    // identify with NickServ
+    if cfg.IdentPass != "" {
+      ircobj.Privmsgf("nickserv", "identify %v %v", cfg.IdentNick, cfg.IdentPass)
+    }
+
+    // if we're not waiting for a vhost to change, just join channels
+    // now
+    if !cfg.WaitVHost {
+      // join channels
+      for _, channel := range cfg.Channel {
+        ircobj.Join(channel)
+      }
+    }
+  })
+
+  // hostname changed
+  ircobj.AddCallback("396", func(event *irc.Event) {
+    // this should probably be toggled to fire only once and never
+    // again somehow.
+    if cfg.WaitVHost {
+      for _, channel := range cfg.Channel {
+        ircobj.Join(channel)
+      }
     }
   })
 

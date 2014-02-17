@@ -27,7 +27,29 @@ nick        = "humanoid"
 host        = "irc.freenode.net"
 port        = 6697
 usessl      = yes
+
+;; Nickserv password.
+
+identpass   = "hunter2"
+
+;; If your nickserv account is tied to another nick, you can specify
+;; it here.
+
+identnick   = "mynormalnick"
+
+;; Sometimes you don't want to join a channel before your vhost has
+;; changed. This option will wait for your VHost to change.
+
+waitvhost   = yes
+
+;; Multiple channels can be listed.
+
 channel     = "#boats"
+channel     = "#cars"
+channel     = "#pets"
+
+;; Can connect to the same network twice using different account
+;; information. If you're into that sort of thing.
 
 ;[network "freenode2"]
 ;nick        = "humanoid"
