@@ -183,9 +183,21 @@ func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit
 
   // hi responder
   ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
-    if m := event.Message(); m == "hi" {
-      ircobj.Privmsgf(event.Arguments[0], "hi, %v", event.Nick)
+    target := event.Arguments[0]
+    if target == cfg.Nick {
+      target = event.Nick
     }
+
+    if m := event.Message(); m == "hi" {
+      ircobj.Privmsgf(target, "hi, %v", event.Nick)
+    }
+  })
+
+  // search logs
+  ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
+    // ignore non-pms
+    if event.Arguments[0] != cfg.Nick { return }
+
   })
 
   // looooooooper
