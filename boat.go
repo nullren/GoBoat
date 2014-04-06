@@ -95,6 +95,18 @@ func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit
     }
   })
 
+  // high five stealer
+  ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
+    target := event.Arguments[0]
+    if target == cfg.Nick {
+      target = event.Nick
+    }
+
+    if m := event.Message(); m == "o/" {
+      ircobj.Privmsgf(target, "%v: \\o", event.Nick)
+    }
+  })
+
   // search logs
   ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
     // ignore non-pms
