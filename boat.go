@@ -13,6 +13,9 @@ import (
   "github.com/nullren/go-ircevent"
 )
 
+/*
+ * this gets spawned many times.
+ */
 func run_network(net string, cfg *NetworkConfig, quit_chan chan string) {
   // initialize: nick, username
   ircobj := irc.IRC(cfg.Nick, cfg.Username)
