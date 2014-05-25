@@ -14,6 +14,7 @@ type NetworkConfig struct {
   UseSSL     bool
   Nick       string
   Username   string
+  Realname   string
   Channel    []string
   IdentPass  string
   IdentNick  string

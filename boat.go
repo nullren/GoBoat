@@ -102,13 +102,6 @@ func run_network(net string, cfg *NetworkConfig, quit_chan chan string) {
     }
   })
 
-  // search logs
-  ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
-    // ignore non-pms
-    if event.Arguments[0] != cfg.Nick { return }
-
-  })
-
   // looooooooper
   ircobj.Loop()
 
