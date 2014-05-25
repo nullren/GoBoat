@@ -12,6 +12,9 @@ type NetworkConfig struct {
   Host       string
   Port       int
   UseSSL     bool
+  UseSocks   bool
+  SocksHost  string
+  SocksPort  int
   Nick       string
   Username   string
   Realname   string

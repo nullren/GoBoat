@@ -21,6 +21,9 @@ func run_network(net string, cfg *NetworkConfig, quit_chan chan string) {
   ircobj.UseTLS = cfg.UseSSL
   ircobj.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
+  // tor
+  ircobj.UseTor = cfg.UseSocks
+
   // spit out everything to stdout
   ircobj.VerboseCallbackHandler = true
 
