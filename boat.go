@@ -10,7 +10,7 @@ import (
   "strings"
 
   "crypto/tls"
-  "github.com/thoj/go-ircevent"
+  "github.com/nullren/go-ircevent"
 )
 
 func run_network(net string, cfg *NetworkConfig, quit_chan chan string) {

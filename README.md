@@ -1,7 +1,7 @@
 The following are required to run:
 
     go get "code.google.com/p/gcfg"
-    go get "github.com/thoj/go-ircevent"
+    go get "github.com/nullren/go-ircevent"
     go get "github.com/mattn/go-sqlite3"
 
 Then provide a configuration file as described by `config.ini.example`

@@ -5,7 +5,7 @@
 package main
 
 import (
-  "github.com/thoj/go-ircevent"
+  "github.com/nullren/go-ircevent"
 )
 
 type NetworkConfig struct {
