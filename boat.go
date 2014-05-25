@@ -13,7 +13,7 @@ import (
   "github.com/thoj/go-ircevent"
 )
 
-func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit_chan chan string) {
+func run_network(net string, cfg *NetworkConfig, quit_chan chan string) {
   // initialize: nick, username
   ircobj := irc.IRC(cfg.Nick, cfg.Username)
 
@@ -78,11 +78,6 @@ func run_network(net string, cfg *NetworkConfig, db_chan chan *LoggerEvent, quit
     ircobj.SendRawf("CONNECT %v", host)
   })
 
-  // log stuff
-  ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
-    db_chan <- &LoggerEvent{Event:event, Network:net}
-  })
-
   // hi responder
   ircobj.AddCallback("PRIVMSG", func(event *irc.Event) {
     target := event.Arguments[0]
@@ -127,16 +122,11 @@ func main() {
   flag.Parse()
   config := load_config(*config_file)
 
-  // set up channel for logging
-  db_chan, db_collector, db_cleanup := db_logger(config.Logger.Driver, config.Logger.Source)
-  defer db_cleanup()
-  go db_collector()
-
   // fire up a bunch of channels for each network
   quit_chans := make(map[string](chan string))
   for net, cfg := range config.Network {
     quit_chans[net] = make(chan string)
-    go run_network(net, cfg, db_chan, quit_chans[net])
+    go run_network(net, cfg, quit_chans[net])
   }
 
   // listen to the quit_chans
